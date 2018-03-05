@@ -47,15 +47,60 @@ var _ = Describe("GoServerless", func() {
 			Expect(importedTemplate.Package.ExcludeDevDependencies).To(Equal(false))
 		})
 
+		// Start Testing the function events!
+		usersCreateFunction := importedTemplate.Functions["usersCreate"]
+
 		It("should read functions params", func() {
-			usersCreateFunction := importedTemplate.Functions["usersCreate"]
 			// Test the function
 			Expect(usersCreateFunction.Handler).To(Equal("users.create"))
 			Expect(usersCreateFunction.Name).To(Equal("${self:provider.stage}-lambdaName"))
 
 			Expect(usersCreateFunction.MemorySize).To(Equal(512))
-			// TODO: Events
 		})
+
+		It("should read the http request", func() {
+			// HTTP Request
+			httpEvent := usersCreateFunction.Events[0].HTTPEvent
+			Expect(httpEvent.Path).To(Equal("users/create"))
+			Expect(httpEvent.Method).To(Equal("get"))
+
+			Expect(httpEvent.Authorizer["name"]).To(Equal("authorizerFunc"))
+			Expect(httpEvent.Authorizer["identityValidationExpression"]).To(Equal("someRegex"))
+		})
+
+		It("should read the s3 event", func() {
+			// S3 Object
+			s3Event := usersCreateFunction.Events[1].S3Event
+			Expect(s3Event.Bucket).To(Equal("photos"))
+			Expect(s3Event.Event).To(Equal("s3:ObjectCreated:*"))
+
+			// TODO: Rules
+		})
+
+		It("should read the schedule event", func() {
+			// Schedule/Cron Event
+			httpEvent := usersCreateFunction.Events[2].ScheduleEvent
+			Expect(httpEvent.Rate).To(Equal("rate(10 minutes)"))
+			Expect(httpEvent.Enabled).To(Equal(false))
+
+			Expect(httpEvent.Input["key1"]).To(Equal("value1"))
+			Expect(httpEvent.Input["key2"]).To(Equal("value2"))
+
+			testStageParams := map[string]interface{}{
+				"stage": "dev",
+			}
+			Expect(httpEvent.Input["stageParams"]).To(Equal(testStageParams))
+		})
+
+		// TODO:
+		// SNS
+		// Stream
+		// AlexaSkill
+		// AlexaSmartHome
+		// IOT
+		// Cloudwatch Event
+		// Cloudwatch Log
+		// Cognito User Pool
 
 		It("should read resources params", func() {
 			// Test the provider
