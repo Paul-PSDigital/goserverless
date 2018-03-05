@@ -38,16 +38,16 @@ import (
 func main() {
 
 	// Create a new CloudFormation template
-    template := serverless.NewTemplate()
+    template := serverless.NewTemplate("myService")
     
     template.Service = "myService"
 
-    template.Providers["aws"] = &serverless.Provider{
+    template.Provider = &serverless.Provider{
         Name: "aws",
         Runtime: "nodejs6.10",
         MemorySize: 512,
         Timeout: 10,
-        versionFunctions: false
+        VersionFunctions: false
     }
 
 	// An example function
