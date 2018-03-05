@@ -1,2 +1,4 @@
 service:
-  name: myService
+  name: basicService
+
+frameworkVersion: ">=1.0.0 <2.1.9"

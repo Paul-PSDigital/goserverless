@@ -8,12 +8,12 @@ import (
 // Template represents an AWS CloudFormation template
 // see: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html
 type Template struct {
-	Service          *Service                `json:"service,omitempty"` // SHOULD BE TYPE SERVICE
+	Service          *Service                `json:"service,omitempty"`
 	FrameworkVersion string                  `json:"frameworkVersion,omitempty"`
-	Functions        map[string]interface{}  `json:"functions,omitempty"`
+	Functions        map[string]Function     `json:"functions,omitempty"`
 	Resources        cloudformation.Template `json:"resources,omitempty"`
-	Provider         string                  `json:"provider,omitempty"` // SHOULD BE TYPE PROVIDER
-	Package          string                  `json:"pacakge,omitempty"`  // SHOULD BE THE PACKAGE TYPE
+	Provider         *Provider               `json:"provider,omitempty"`
+	Package          *Package                `json:"package,omitempty"`
 }
 
 // NewTemplate creates a new AWS CloudFormation template struct

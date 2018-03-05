@@ -1,10 +1,13 @@
 package goserverless
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 
+	yamlwrapper "github.com/sanathkr/yaml"
+
 	"github.com/thepauleh/goserverless/serverless"
-	yaml "gopkg.in/yaml.v2"
 )
 
 // Open and parse a Serverless template from file.
@@ -15,8 +18,17 @@ func Open(filename string) (*serverless.Template, error) {
 		return nil, err
 	}
 
+	return openYaml(data)
+}
+
+func openYaml(input []byte) (*serverless.Template, error) {
+	data, err := yamlwrapper.YAMLToJSON(input)
+	if err != nil {
+		return nil, fmt.Errorf("invalid YAML template: %s", err)
+	}
+
 	template := &serverless.Template{}
-	if err := yaml.Unmarshal(data, template); err != nil {
+	if err := json.Unmarshal(data, template); err != nil {
 		return nil, err
 	}
 
