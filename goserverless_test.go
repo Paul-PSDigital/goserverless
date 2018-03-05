@@ -1,9 +1,10 @@
-package serverless_test
+package goserverless_test
 
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	//. "github.com/onsi/gomega/gstruct"
+	. "github.com/thepauleh/goserverless"
 	. "github.com/thepauleh/goserverless/serverless"
 )
 
@@ -17,6 +18,13 @@ var _ = Describe("GoServerless", func() {
 		It("should successfully return the serverless template", func() {
 			Expect(err).To(BeNil())
 			Expect(template).ShouldNot(BeNil())
+		})
+
+		importedTemplate, err := goserverless.Open("test/yaml/basic-service.yaml")
+
+		It("should be the same as the imported basic file", func() {
+			Expect(err).To(BeNil())
+			Expect(template).To(Equal(importedTemplate))
 		})
 	})
 })

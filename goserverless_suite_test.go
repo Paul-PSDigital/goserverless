@@ -1,4 +1,4 @@
-package serverless_test
+package goserverless_test
 
 import (
 	. "github.com/onsi/ginkgo"
