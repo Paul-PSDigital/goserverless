@@ -1,5 +1,5 @@
 # Go Serverless
-Literally just started this project - don't expect it to do much... YET!
+Just started this project and dog-fooded it. Will work for most users, some events not yet supported.
 
 `GoFormation` is a Go library for working with AWS CloudFormation / AWS Serverless Application Model (SAM) templates. 
 - [AWS GoFormation](#aws-goformation)

@@ -21,6 +21,7 @@ func NewTemplate(serviceName string) *Template {
 	return &Template{
 		Service:          &Service{Name: serviceName},
 		FrameworkVersion: ">=1.0.0 <2.0.0",
+		Functions:        map[string]Function{},
 	}
 }
 
