@@ -1,5 +1,7 @@
 # Go Serverless
-Just started this project and dog-fooded it. Will work for most users, some events not yet supported.
+[![Build Status](https://travis-ci.org/thepauleh/goserverless.svg?branch=master)](https://travis-ci.org/thepauleh/goserverless)   
+
+GoFormation for users wishing to transfer to serverless! 
 
 `GoFormation` is a Go library for working with AWS CloudFormation / AWS Serverless Application Model (SAM) templates. 
 - [AWS GoFormation](#aws-goformation)
