@@ -23,6 +23,44 @@ provider:
   environment: # Service wide environment variables
     serviceEnvVar: 123456789
   endpointType: regional # Optional endpoint configuration for API Gateway REST API. Default is Edge.
+  apiKeys: # List of API keys to be used by your service API Gateway REST API
+    - myFirstKey
+    - ${opt:stage}-myFirstKey
+    - ${env:MY_API_KEY} # you can hide it in a serverless variable
+  stackTags: # Optional CF stack tags
+    key: value
+  iamRoleStatements: # IAM role statements so that services can be accessed in the AWS account
+      - Effect: 'Allow'
+        Action:
+          - 's3:ListBucket'
+        Resource:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:s3:::'
+              - Ref: ServerlessDeploymentBucket
+  stackPolicy: # Optional CF stack policy. The example below allows updates to all resources except deleting/replacing EC2 instances (use with caution!)
+    - Effect: Allow
+      Principal: "*"
+      Action: "Update:*"
+      Resource: "*"
+    - Effect: Deny
+      Principal: "*"
+      Action:
+        - Update:Replace
+        - Update:Delete
+      Condition:
+        StringEquals:
+          ResourceType:
+            - AWS::EC2::Instance
+  vpc: # Optional VPC. But if you use VPC then both subproperties (securityGroupIds and subnetIds) are required
+    securityGroupIds:
+      - securityGroupId1
+      - securityGroupId2
+    subnetIds:
+      - subnetId1
+      - subnetId2
+  notificationArns: # List of existing Amazon SNS topics in the same region where notifications about stack events are sent.
+    - 'arn:aws:sns:us-east-1:XXXXXX:mytopic'
 
 package: # Optional deployment packaging configuration
   include: # Specify the directories and files which should be included in the deployment package

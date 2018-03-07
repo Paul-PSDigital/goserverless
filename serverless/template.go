@@ -14,6 +14,8 @@ type Template struct {
 	Resources        cloudformation.Template `json:"resources,omitempty"`
 	Provider         *Provider               `json:"provider,omitempty"`
 	Package          *Package                `json:"package,omitempty"`
+	Plugins          []string                `json:"plugins,omitempty"`
+	Custom           map[string]interface{}  `json:"custom,omitempty"`
 }
 
 // NewTemplate creates a new AWS CloudFormation template struct
