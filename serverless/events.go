@@ -6,6 +6,7 @@ type Events struct {
 	S3Event              *S3Event              `json:"s3,omitempty"`
 	ScheduleEvent        *ScheduleEvent        `json:"schedule,omitempty"`
 	SNSEvent             *SNSEvent             `json:"sns,omitempty"`
+	SQSEvent             *SQSEvent             `json:"sqs,omitempty"`
 	StreamEvent          *StreamEvent          `json:"stream,omitempty"`
 	AlexaSkillEvent      *AlexaEvent           `json:"alexaSkill,omitempty"`
 	AlexaSmartHomeEvent  *AlexaEvent           `json:"alexaSmartHome,omitempty"`
@@ -42,6 +43,12 @@ type ScheduleEvent struct {
 type SNSEvent struct {
 	TopicName   string `json:"topicName,omitempty"`
 	DisplayName string `json:"displayName,omitempty"`
+}
+
+// SQSEvent definition
+type SQSEvent struct {
+	ARN       string `json:"arn,omitempty"`
+	BatchSize int    `json:"batchSize,omitempty"`
 }
 
 // StreamEvent definition
