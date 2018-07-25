@@ -188,5 +188,9 @@ var _ = Describe("GoServerless", func() {
 			// Test the provider
 			Expect(importedTemplate.Resources.Resources).ShouldNot(BeNil())
 		})
+
+		It("Should pull out the resource policy", func() {
+			Expect(importedTemplate.Provider.ResourcePolicy).ShouldNot(BeNil())
+		})
 	})
 })

@@ -16,8 +16,9 @@ type Provider struct {
 	VersionFunctions   bool                     `json:"versionFunctions,omitempty"`
 	Environment        map[string]interface{}   `json:"environment,omitempty"`
 	EndpointType       string                   `json:"endpointType,omitempty"`
-	Tracing            bool                     `json:"tracing,omitempty"`
+	ResourcePolicy     []map[string]interface{} `json:"resourcePolicy,omitempty"`
 	StackTags          map[string]interface{}   `json:"stackTags,omitempty"`
+	Tracing            bool                     `json:"tracing,omitempty"`
 	APIKeys            []string                 `json:"apiKeys,omitempty"`
 	IAMRoleStatements  []map[string]interface{} `json:"iamRoleStatements,omitempty"`
 	StackPolicy        []map[string]interface{} `json:"stackPolicy,omitempty"`
