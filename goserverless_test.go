@@ -1,6 +1,9 @@
 package goserverless_test
 
 import (
+	"io/ioutil"
+	"os"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/thepauleh/goserverless"
@@ -13,9 +16,52 @@ var _ = Describe("GoServerless", func() {
 
 		It("should read basic params", func() {
 			Expect(err).To(BeNil())
+			Expect(importedTemplate).To(Not(BeNil()))
 
 			Expect(importedTemplate.Service.Name).To(Equal("basicService"))
 			Expect(importedTemplate.FrameworkVersion).To(Equal(">=1.0.0 <2.1.9"))
+		})
+
+		It("should roundtrip without error", func() {
+			bytes, err := importedTemplate.YAML()
+			Expect(err).To(BeNil())
+			file, err := ioutil.TempFile("", "goformation")
+			defer os.Remove(file.Name())
+			Expect(err).To(BeNil())
+			_, err = file.Write(bytes)
+			Expect(err).To(BeNil())
+			err = file.Close()
+			Expect(err).To(BeNil())
+			roundtripTemplate, err := goserverless.Open(file.Name())
+			Expect(err).To(BeNil())
+			Expect(roundtripTemplate).To(Not(BeNil()))
+		})
+	})
+
+	Context("Transform and hydrate a serverless config with a string service value back to our structs", func() {
+		importedTemplate, err := goserverless.Open("test/yaml/service-just-name.yaml")
+
+		It("should read basic params", func() {
+			Expect(err).To(BeNil())
+			Expect(importedTemplate).To(Not(BeNil()))
+
+			Expect(importedTemplate.Service.Name).To(Equal("basicService"))
+			Expect(importedTemplate.FrameworkVersion).To(Equal(">=1.0.0 <2.1.9"))
+		})
+
+		It("should roundtrip without error", func() {
+			bytes, err := importedTemplate.YAML()
+			Expect(err).To(BeNil())
+			file, err := ioutil.TempFile("", "goformation")
+			defer os.Remove(file.Name())
+			Expect(err).To(BeNil())
+			_, err = file.Write(bytes)
+			Expect(err).To(BeNil())
+			err = file.Close()
+			Expect(err).To(BeNil())
+			roundtripTemplate, err := goserverless.Open(file.Name())
+			Expect(err).To(BeNil())
+			Expect(roundtripTemplate).To(Not(BeNil()))
 		})
 	})
 
@@ -24,12 +70,14 @@ var _ = Describe("GoServerless", func() {
 
 		It("should get the imported template", func() {
 			Expect(err).To(BeNil())
+			Expect(importedTemplate).To(Not(BeNil()))
 		})
 		// Start Testing the function events!
 		usersCreateFunction := importedTemplate.Functions["usersCreate"]
 
 		It("should read basic params", func() {
 			Expect(err).To(BeNil())
+			Expect(importedTemplate).To(Not(BeNil()))
 
 			Expect(importedTemplate.Service.Name).To(Equal("myService"))
 			Expect(importedTemplate.FrameworkVersion).To(Equal(">=1.0.0 <2.0.0"))
@@ -191,6 +239,21 @@ var _ = Describe("GoServerless", func() {
 
 		It("Should pull out the resource policy", func() {
 			Expect(importedTemplate.Provider.ResourcePolicy).ShouldNot(BeNil())
+		})
+
+		It("should roundtrip without error", func() {
+			bytes, err := importedTemplate.YAML()
+			Expect(err).To(BeNil())
+			file, err := ioutil.TempFile("", "goformation")
+			defer os.Remove(file.Name())
+			Expect(err).To(BeNil())
+			_, err = file.Write(bytes)
+			Expect(err).To(BeNil())
+			err = file.Close()
+			Expect(err).To(BeNil())
+			roundtripTemplate, err := goserverless.Open(file.Name())
+			Expect(err).To(BeNil())
+			Expect(roundtripTemplate).To(Not(BeNil()))
 		})
 	})
 })
