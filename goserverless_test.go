@@ -4,8 +4,10 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/awslabs/goformation/cloudformation/resources"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
 	"github.com/thepauleh/goserverless"
 )
 
@@ -235,6 +237,7 @@ var _ = Describe("GoServerless", func() {
 		It("should read resources params", func() {
 			// Test the provider
 			Expect(importedTemplate.Resources.Resources).ShouldNot(BeNil())
+			Expect(importedTemplate.Resources.Resources["usersTable"]).Should(BeAssignableToTypeOf(new(resources.AWSDynamoDBTable)))
 		})
 
 		It("Should pull out the resource policy", func() {
