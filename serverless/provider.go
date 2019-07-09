@@ -1,5 +1,10 @@
 package serverless
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 // Provider definition
 type Provider struct {
 	Name               string                   `json:"name,omitempty"`
@@ -18,7 +23,7 @@ type Provider struct {
 	EndpointType       string                   `json:"endpointType,omitempty"`
 	ResourcePolicy     []map[string]interface{} `json:"resourcePolicy,omitempty"`
 	StackTags          map[string]interface{}   `json:"stackTags,omitempty"`
-	Tracing            bool                     `json:"tracing,omitempty"`
+	Tracing            *Tracing                 `json:"tracing,omitempty"`
 	APIKeys            []string                 `json:"apiKeys,omitempty"`
 	IAMRoleStatements  []map[string]interface{} `json:"iamRoleStatements,omitempty"`
 	StackPolicy        []map[string]interface{} `json:"stackPolicy,omitempty"`
@@ -30,4 +35,26 @@ type Provider struct {
 type DeploymentBucket struct {
 	Name                 string `json:"name,omitempty"`
 	ServerSideEncryption string `json:"serverSideEncryption,omitempty"`
+}
+
+type Tracing struct {
+	Lambda     bool `json:"lambda,omitempty"`
+	ApiGateway bool `json:"apiGateway,omitempty"`
+}
+
+func (t *Tracing) UnmarshalJSON(bytes []byte) error {
+	var tracing interface{}
+	if err := json.Unmarshal(bytes, &tracing); err != nil {
+		return err
+	}
+	switch v := tracing.(type) {
+	case bool:
+		t.ApiGateway = true
+	case map[string]interface{}:
+		t.ApiGateway = v["apiGateway"].(bool)
+		t.Lambda = v["lambda"].(bool)
+	default:
+		return fmt.Errorf("unable to parse provider.tracing")
+	}
+	return nil
 }

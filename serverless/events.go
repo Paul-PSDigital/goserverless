@@ -1,5 +1,10 @@
 package serverless
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 // Events definition
 type Events struct {
 	HTTPEvent            *HTTPEvent            `json:"http,omitempty"`
@@ -25,11 +30,59 @@ type HTTPEvent struct {
 	Authorizer map[string]interface{} `json:"authorizer,omitempty"`
 }
 
+func (h *HTTPEvent) UnmarshalJSON(bytes []byte) error {
+	var event map[string]interface{}
+	if err := json.Unmarshal(bytes, &event); err != nil {
+		return err
+	}
+	if event["path"] != nil {
+		h.Path = event["path"].(string)
+	}
+	if event["method"] != nil {
+		h.Method = event["method"].(string)
+	}
+	if event["cors"] != nil {
+		h.Cors = event["cors"].(bool)
+	}
+	if event["private"] != nil {
+		h.Cors = event["private"].(bool)
+	}
+	if event["authorizer"] != nil {
+		switch v:= event["authorizer"].(type) {
+		case string:
+			h.Authorizer = map[string]interface{}{"name": v}
+		case map[string]interface{}:
+			h.Authorizer = v
+		default:
+			return fmt.Errorf("http event authorizer set, but unparseable")
+		}
+	}
+	return nil
+}
+
 // S3Event definition
 type S3Event struct {
 	Bucket string      `json:"bucket,omitempty"`
 	Event  string      `json:"event,omitempty"`
 	Rules  interface{} `json:"rules,omitempty"`
+}
+
+func (s *S3Event) UnmarshalJSON(bytes []byte) error {
+	var event interface{}
+	if err := json.Unmarshal(bytes, &event); err != nil {
+		return err
+	}
+	switch e := event.(type) {
+	case string:
+		s.Bucket = e
+	case map[string]interface{}:
+		s.Bucket = e["bucket"].(string)
+		s.Event = e["event"].(string)
+		s.Rules = e["rules"]
+	default:
+		return fmt.Errorf("could not unmarshal type serverless.S3Event")
+	}
+	return nil
 }
 
 // ScheduleEvent definition

@@ -2,10 +2,9 @@ package goserverless
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 
-	yamlwrapper "github.com/sanathkr/yaml"
+	"github.com/awslabs/goformation/intrinsics"
 
 	"github.com/thepauleh/goserverless/serverless"
 )
@@ -22,13 +21,12 @@ func Open(filename string) (*serverless.Template, error) {
 }
 
 func openYaml(input []byte) (*serverless.Template, error) {
-	data, err := yamlwrapper.YAMLToJSON(input)
+	intrinsified, err := intrinsics.ProcessYAML(input, nil)
 	if err != nil {
-		return nil, fmt.Errorf("invalid YAML template: %s", err)
+		return nil, err
 	}
-
 	template := &serverless.Template{}
-	if err := json.Unmarshal(data, template); err != nil {
+	if err := json.Unmarshal(intrinsified, template); err != nil {
 		return nil, err
 	}
 
