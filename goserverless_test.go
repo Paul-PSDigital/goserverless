@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/awslabs/goformation/cloudformation/resources"
+	"github.com/awslabs/goformation/v4/cloudformation/dynamodb"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -237,7 +237,7 @@ var _ = Describe("GoServerless", func() {
 		It("should read resources params", func() {
 			// Test the provider
 			Expect(importedTemplate.Resources.Resources).ShouldNot(BeNil())
-			Expect(importedTemplate.Resources.Resources["usersTable"]).Should(BeAssignableToTypeOf(new(resources.AWSDynamoDBTable)))
+			Expect(importedTemplate.Resources.Resources["usersTable"]).Should(BeAssignableToTypeOf(new(dynamodb.Table)))
 		})
 
 		It("Should pull out the resource policy", func() {

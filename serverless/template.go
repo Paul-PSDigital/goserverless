@@ -1,7 +1,7 @@
 package serverless
 
 import (
-	"github.com/awslabs/goformation/cloudformation"
+	"github.com/awslabs/goformation/v4/cloudformation"
 	"github.com/sanathkr/yaml"
 )
 

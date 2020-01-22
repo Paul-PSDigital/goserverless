@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/awslabs/goformation/intrinsics"
+	"github.com/awslabs/goformation/v4/intrinsics"
 
 	"github.com/thepauleh/goserverless/serverless"
 )
