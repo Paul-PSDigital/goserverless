@@ -47,12 +47,31 @@ func (t *Tracing) UnmarshalJSON(bytes []byte) error {
 	if err := json.Unmarshal(bytes, &tracing); err != nil {
 		return err
 	}
-	switch v := tracing.(type) {
+	switch tracing.(type) {
 	case bool:
-		t.ApiGateway = true
+		t.ApiGateway = tracing.(bool)
 	case map[string]interface{}:
-		t.ApiGateway = v["apiGateway"].(bool)
-		t.Lambda = v["lambda"].(bool)
+		tracingObj := tracing.(Tracing)
+		t.Lambda = tracingObj.Lambda
+		t.ApiGateway = tracingObj.ApiGateway
+	default:
+		return fmt.Errorf("unable to parse provider.tracing")
+	}
+	return nil
+}
+
+func (d *DeploymentBucket) UnmarshalJSON(bytes []byte) error {
+	var db interface{}
+	if err := json.Unmarshal(bytes, &db); err != nil {
+		return err
+	}
+	switch db.(type) {
+	case string:
+		d.Name = db.(string)
+	case map[string]interface{}:
+		deploymentObj := db.(DeploymentBucket)
+		d.ServerSideEncryption = deploymentObj.ServerSideEncryption
+		d.Name = deploymentObj.Name
 	default:
 		return fmt.Errorf("unable to parse provider.tracing")
 	}
