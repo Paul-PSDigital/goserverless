@@ -69,9 +69,9 @@ func (d *DeploymentBucket) UnmarshalJSON(bytes []byte) error {
 	case string:
 		d.Name = db.(string)
 	case map[string]interface{}:
-		debloymentObj := db.(DeploymentBucket)
-		d.ServerSideEncryption = debloymentObj.ServerSideEncryption
-		d.Name = debloymentObj.Name
+		deploymentObj := db.(DeploymentBucket)
+		d.ServerSideEncryption = deploymentObj.ServerSideEncryption
+		d.Name = deploymentObj.Name
 	default:
 		return fmt.Errorf("unable to parse provider.tracing")
 	}
