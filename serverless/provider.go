@@ -51,9 +51,11 @@ func (t *Tracing) UnmarshalJSON(bytes []byte) error {
 	case bool:
 		t.ApiGateway = tracing.(bool)
 	case map[string]interface{}:
-		tracingObj := tracing.(Tracing)
-		t.Lambda = tracingObj.Lambda
-		t.ApiGateway = tracingObj.ApiGateway
+		if val, ok := tracing.(map[string]interface{})["lambda"]; ok {
+			t.Lambda = val.(bool)
+		} else if val, ok := tracing.(map[string]interface{})["apiGateway"]; ok {
+			t.ApiGateway = val.(bool)
+		}
 	default:
 		return fmt.Errorf("unable to parse provider.tracing")
 	}
