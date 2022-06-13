@@ -35,6 +35,7 @@ type Provider struct {
 type DeploymentBucket struct {
 	Name                 string `json:"name,omitempty"`
 	ServerSideEncryption string `json:"serverSideEncryption,omitempty"`
+	blockPublicAccess    bool   `json:"blockPublicAccess,omitempty"`
 }
 
 type Tracing struct {
@@ -71,9 +72,15 @@ func (d *DeploymentBucket) UnmarshalJSON(bytes []byte) error {
 	case string:
 		d.Name = db.(string)
 	case map[string]interface{}:
-		deploymentObj := db.(DeploymentBucket)
-		d.ServerSideEncryption = deploymentObj.ServerSideEncryption
-		d.Name = deploymentObj.Name
+		if val, ok := db.(map[string]interface{})["name"]; ok {
+			d.Name = val.(string)
+		}
+		if val, ok := db.(map[string]interface{})["serverSideEncryption"]; ok {
+			d.ServerSideEncryption = val.(string)
+		}
+		if val, ok := db.(map[string]interface{})["blockPublicAccess"]; ok {
+			d.blockPublicAccess = val.(bool)
+		}
 	default:
 		return fmt.Errorf("unable to parse provider.tracing")
 	}
