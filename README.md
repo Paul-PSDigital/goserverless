@@ -101,6 +101,6 @@ functions:
     reservedConcurrency: 5
     events:
       - http:
-        path: users/create
-        method: post
+          path: users/create
+          method: post
 ```
